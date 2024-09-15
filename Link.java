@@ -7,9 +7,17 @@ public class Link {
         this.otherTopic = otherTopic;
         this.description = description;
     }
+
+    /**
+     * @return what topic is linked to
+     */
     public Topic getOtherTopic() {
         return otherTopic;
     }
+
+    /**
+     * @return relation of the two linked topics
+     */
     public String getDescription() {
         return description;
     }
