@@ -5,22 +5,22 @@ public class Topic {
     private HashSet<Link> links;
     private HashSet<String> tags;
     private String info;
-    private TreeMap<String,String> questions;
+    private List<Question> questions;
 
     public Topic(String name, String info) {
         this.name = name;
         this.info = info;
         this.links = new HashSet<>();
         this.tags = new HashSet<>();
-        this.questions = new TreeMap<>();
+        this.questions = new ArrayList<>();
     }
 
     /**
-     * Stores a link in this topic and other topic
+     * Stores a link in this topic and another topic
      * @param otherTopic topic that links to current topic
      * @param description description of the relation between the two topics
      */
-    public void makeLink(Topic otherTopic, String description) {
+    public void link(Topic otherTopic, String description) {
         links.add(new Link(otherTopic, description));
         otherTopic.links.add(new Link(this, description));
     }
@@ -30,7 +30,7 @@ public class Topic {
      * @param otherTopic topic that links to current topic
      * @param description description of the relation between the two topics
      */
-    public void pointsTo(Topic otherTopic, String description) {
+    public void linkThis(Topic otherTopic, String description) {
         links.add(new Link(otherTopic, description));
     }
 
@@ -39,7 +39,7 @@ public class Topic {
      * @param otherTopic topic that links to current topic
      * @param description description of the relation between the two topics
      */
-    public void pointsFrom(Topic otherTopic, String description) {
+    public void linkOther(Topic otherTopic, String description) {
         otherTopic.links.add(new Link(this, description));
     }
 
@@ -54,6 +54,9 @@ public class Topic {
      * Prints all links for this Topic
      */
     public void printLinks() {
+        if (links.isEmpty()) {
+            return;
+        }
         for (Link link : links) {
             System.out.println(link.getOtherTopic().getName());
             System.out.println(link.getDescription() +"\n");
@@ -77,8 +80,8 @@ public class Topic {
         printLinks();
     }
 
-    public void addQuestion(String question, String answer) {
-        questions.put(question,answer);
+    public void addQuestion(String question, String answer, String type) {
+        questions.add(new Question(question, answer, type));
     }
 
     /**
@@ -89,21 +92,15 @@ public class Topic {
             System.out.println("There are no questions for this topic yet");
         }
         Random random = new Random();
-        String randomQ = new ArrayList<>(questions.keySet()).get(random.nextInt(questions.size()));
-        HashSet<String> answers = new HashSet<>();
-        answers.add(questions.get(randomQ));
-        System.out.println(randomQ);
-        for (int i = 0; i < 3; i++) {
-            answers.add("Test answer " + (i+1));
-        }
-        int count = 1;
-        for (String answer : answers) {
-            System.out.println(count + ": " + answer);
-            count ++;
-        }
+        int randomQ = random.nextInt(questions.size());
+        questions.get(randomQ).askQuestion();
     };
     public String toString() {
         return getName();
+    }
+
+    public void tag(String tag) {
+        tags.add(tag);
     }
 
 }
